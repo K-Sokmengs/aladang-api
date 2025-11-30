@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using aladang_server_api.Models;
 using aladang_server_api.Models.BO.Req;
 using aladang_server_api.Models.BO.Res;
@@ -30,3 +30,35 @@ namespace aladang_server_api.Interface
     }
 }
 
+*/
+
+using System;
+using System.Collections.Generic;
+using aladang_server_api.Models;
+using aladang_server_api.Models.BO.Req;
+using aladang_server_api.Models.BO.Res;
+
+namespace aladang_server_api.Interface
+{
+    public interface IProduct
+    {
+        List<ProductRes> GetAll();
+        List<ProductRes> GetProduct(int page);
+        List<ProductRes> GetByShopId(int shopid, int page, string status);
+        List<ProductRes> GetByShopId(int shopid);
+        List<ProductRes> GetByStatus(string status, int page);
+        ProductRes GetById(int id);
+
+        double Count();
+        double Count(string status);
+        double Count(int shopid, string status);
+        double Count(int shopid);
+
+        double PageCount();
+        double PageCount(string status);
+        double PageCount(int shopid, string status);
+
+        Product CreateNew(ProductReq req);
+        Product Update(ProductReq req);
+    }
+}

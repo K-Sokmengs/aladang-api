@@ -79,21 +79,43 @@ namespace aladang_server_api.Services
 
         }
 
+        /* public PaymentMethod Update(PaymentMethod req)
+         {
+             PaymentMethod paymentMethod = _contex.paymentMethods!.FirstOrDefault(c => c.id == req.id)!;
+             paymentMethod.methodname = req.methodname;
+             paymentMethod.createby = req.createby;
+             paymentMethod.createdate = req.createdate;
+             paymentMethod.status = req.status;
+             _contex.SaveChanges();
+             PaymentMethod result = _contex.paymentMethods!.Where(u => u.id == req.id).FirstOrDefault()!;
+             if (result != null)
+             {
+                 return result;
+             }
+             return null!;
+
+         }*/
         public PaymentMethod Update(PaymentMethod req)
         {
-            PaymentMethod paymentMethod = _contex.paymentMethods!.FirstOrDefault(c => c.id == req.id)!;
-            paymentMethod.methodname = req.methodname;
-            paymentMethod.createby = req.createby;
-            paymentMethod.createdate = req.createdate;
-            paymentMethod.status = req.status;
-            _contex.SaveChanges();
-            PaymentMethod result = _contex.paymentMethods!.Where(u => u.id == req.id).FirstOrDefault()!;
-            if (result != null)
+            try
             {
-                return result;
+                var paymentMethod = _contex.paymentMethods!.FirstOrDefault(c => c.id == req.id);
+                if (paymentMethod == null)
+                {
+                    return null!;
+                }
+                paymentMethod.methodname = req.methodname;
+                paymentMethod.createby = req.createby;
+                paymentMethod.status = req.status;
+                _contex.paymentMethods!.Update(paymentMethod);
+                _contex.SaveChanges();
+                return paymentMethod;
             }
-            return null!;
-
+            catch (Exception ex)
+            {
+                Console.WriteLine($"PaymentMethod Update error: {ex.Message}");
+                return null!;
+            }
         }
     }
 }

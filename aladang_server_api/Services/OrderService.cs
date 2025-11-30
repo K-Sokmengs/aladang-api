@@ -396,37 +396,59 @@ namespace aladang_server_api.Services
 
         public Order Update(Order req)
         {
-            Order order = _contex.orders!.FirstOrDefault(c => c.id == req.id)!;
-            order.InvoiceNo = req.InvoiceNo;
-            order.Date = req.Date;
-            order.ShopId = req.ShopId;
-            order.CustomerId = req.CustomerId;
-            order.DeliveryTypeIn = req.DeliveryTypeIn;
-            order.CurrentLocation = req.CurrentLocation;
-            order.Phone = req.Phone;
-            order.PaymentType = req.PaymentType;
-            order.QrcodeShopName = req.QrcodeShopName;
-            order.BankName = req.BankName;
-            order.AccountName = req.AccountName;
-            order.AccountNumber = req.AccountNumber;
-            order.ReceiptUpload = req.ReceiptUpload;
-            order.AmountTobePaid = req.AmountTobePaid;
-            order.ExchangeId = req.ExchangeId;
-            order.Status = req.Status;
-            order.DeliveryAmount = req.DeliveryAmount;
-            order.TaxAmount = req.TaxAmount;
-            order.DiscountAmount = req.DiscountAmount;
-            _contex.SaveChanges();
-            Order result = _contex.orders!.Where(c => c.id == req.id).FirstOrDefault()!;
-            if (result != null)
+            try
             {
-                return result;
+                // Find the existing order
+                var order = _contex.orders!.FirstOrDefault(c => c.id == req.id);
+
+                if (order == null)
+                {
+                    return null!;
+                }
+
+                // Update all properties
+                order.FromShopId = req.FromShopId; // This was missing!
+                order.InvoiceNo = req.InvoiceNo;
+                order.Date = req.Date;
+                order.ShopId = req.ShopId;
+                order.CustomerId = req.CustomerId;
+                order.DeliveryTypeIn = req.DeliveryTypeIn;
+                order.CurrentLocation = req.CurrentLocation;
+                order.Phone = req.Phone;
+                order.PaymentType = req.PaymentType;
+                order.QrcodeShopName = req.QrcodeShopName;
+                order.BankName = req.BankName;
+                order.AccountName = req.AccountName;
+                order.AccountNumber = req.AccountNumber;
+                order.ReceiptUpload = req.ReceiptUpload;
+                order.AmountTobePaid = req.AmountTobePaid;
+                order.ExchangeId = req.ExchangeId;
+                order.Status = req.Status;
+                order.DeliveryAmount = req.DeliveryAmount;
+                order.TaxAmount = req.TaxAmount;
+                order.DiscountAmount = req.DiscountAmount;
+
+                // Explicitly mark as modified
+                _contex.orders!.Update(order);
+
+                // Save changes
+                _contex.SaveChanges();
+
+                // Return the updated order
+                return order;
             }
-            return null!;
+            catch (Exception ex)
+            {
+                // Log the exception for debugging
+
+                Console.WriteLine($"Update error: {ex.Message}");
+                return null!;
+            }
         }
-
-
         
+
+
     }
 }
+
 

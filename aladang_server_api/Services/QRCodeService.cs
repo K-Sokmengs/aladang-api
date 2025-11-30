@@ -67,7 +67,7 @@ namespace aladang_server_api.Services
                 return productImage;
             }
             return null!;
-
+             
         }
 
         public QRCode CreateNew(QRCode req)
@@ -82,6 +82,23 @@ namespace aladang_server_api.Services
 
         public QRCode Update(QRCode req)
         {
+            var qrcode = _contex.qRCodes!
+                .FirstOrDefault(c => c.id == req.id);
+
+            if (qrcode == null)
+                return null!;
+
+            qrcode.qrcode = req.qrcode ?? qrcode.qrcode;
+            qrcode.createby = req.createby ?? qrcode.createby;
+            qrcode.createdate = req.createdate ?? qrcode.createdate;
+
+            _contex.SaveChanges();
+
+            return qrcode;
+        }
+
+        /*public QRCode Update(QRCode req)
+        {
             QRCode qRCode = _contex.qRCodes!.FirstOrDefault(c => c.id == req.id)!;
             qRCode.qrcode = req.qrcode;
             qRCode.createby = req.createby;
@@ -94,7 +111,7 @@ namespace aladang_server_api.Services
             }
             return null!;
 
-        }
+        }*/
     }
 }
 
