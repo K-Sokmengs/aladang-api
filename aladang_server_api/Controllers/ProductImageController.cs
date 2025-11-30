@@ -94,20 +94,68 @@ namespace aladang_server_api.Controllers
         }
 
         [HttpPut("update")]
-        public ActionResult Put([FromBody] ProductImage req)
+        public IActionResult Put([FromBody] ProductImage req)
         {
-            var result = appService.Update(req);
-            return Ok(new
+            try
             {
-                code = 200,
-                message = "Data Successfully",
-                count = 1,
-                countPage = 1,
-                currentPage = 1,
-                data = result
+                if (req == null || req.id == 0)
+                {
+                    return BadRequest(new
+                    {
+                        code = 400,
+                        message = "Invalid request data"
+                    });
+                }
 
-            });
+                var result = appService.Update(req);
+
+                if (result != null)
+                {
+                    return Ok(new
+                    {
+                        code = 200,
+                        message = "Data Updated Successfully",
+                        count = 1,
+                        countPage = 1,
+                        currentPage = 1,
+                        data = result
+                    });
+                }
+                else
+                {
+                    return NotFound(new
+                    {
+                        code = 404,
+                        message = "ProductImage not found"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    code = 500,
+                    message = "Error updating data: " + ex.Message
+                });
+            }
         }
     }
+
+    /*  [HttpPut("update")]
+      public ActionResult Put([FromBody] ProductImage req)
+      {
+          var result = appService.Update(req);
+          return Ok(new
+          {
+              code = 200,
+              message = "Data Successfully",
+              count = 1,
+              countPage = 1,
+              currentPage = 1,
+              data = result
+
+          });
+      }*/
 }
+
 
